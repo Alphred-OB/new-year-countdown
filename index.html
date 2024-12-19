@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>New Year Countdown - Ghana Time</title>
+    <style>
+       /* Import Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800&display=swap');
+
+/* Custom Properties */
+:root {
+    --primary: #1e3a8a;
+    --secondary: #0f172a;
+    --accent: #38bdf8;
+    --dark: rgba(2, 6, 23, 0.95);
+    --light: rgba(15, 23, 42, 0.95);
+    --glass: rgba(15, 23, 42, 0.7);
+    --border: rgba(56, 189, 248, 0.2);
+    --glow: rgba(56, 189, 248, 0.3);
+}
+
+/* Reset & Base Styles */
+*, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    -webkit-font-smoothing: antialiased;
+}
+
+html {
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+body {
+    min-height: 100vh;
+    background: 
+        linear-gradient(135deg, var(--dark), var(--light)),
+        url('walpaper.jpg') 
+        center/cover no-repeat fixed;
+    font-family: 'Orbitron', sans-serif;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden;
+    position: relative;
+}
+
+/* Main Container */
+.container {
+    width: min(95%, 1200px);
+    margin: clamp(20px, 5vh, 50px) auto;
+    padding: clamp(20px, 4vw, 40px);
+    background: var(--glass);
+    border-radius: 30px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+    position: relative;
+    z-index: 1;
+    animation: containerFloat 4s ease-in-out infinite;
+}
+
+/* Title Styles */
+h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    text-align: center;
+    margin-bottom: clamp(30px, 5vh, 50px);
+    background: linear-gradient(45deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px var(--glow);
+    letter-spacing: 2px;
+}
+
+/* Countdown Grid */
+#countdown {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: clamp(15px, 3vw, 30px);
+    margin: clamp(30px, 5vh, 50px) 0;
+}
+
+/* Time Sections */
+.time-section {
+    background: linear-gradient(145deg, 
+        rgba(30, 58, 138, 0.3),
+        rgba(15, 23, 42, 0.8));
+    padding: clamp(20px, 3vw, 35px);
+    border-radius: 20px;
+    border: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.time-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.time-section:hover::before {
+    left: 100%;
+}
+
+.time-section span {
+    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 0 15px var(--glow);
+    margin-bottom: 10px;
+}
+
+.time-section p {
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 2px;
+}
+
+/* New Year Message */
+#new-year-message {
+    text-align: center;
+    opacity: 0;
+    transform: scale(0.8);
+    transition: all 0.5s ease;
+}
+
+#new-year-message.show {
+    opacity: 1;
+    transform: scale(1);
+    animation: celebrate 2s infinite alternate;
+}
+
+#new-year-message h2 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    background: linear-gradient(45deg, #fff, var(--accent));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px var(--glow);
+}
+
+/* Creator Credit */
+.creator-credit {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    padding: 15px 25px;
+    background: var(--glass);
+    border-radius: 15px;
+    backdrop-filter: blur(10px);
+    border: 1px solid var(--border);
+    font-size: 0.9rem;
+    z-index: 10;
+    transition: all 0.3s ease;
+}
+
+.creator-credit span {
+    color: var(--accent);
+    font-weight: 600;
+}
+
+/* Fireworks */
+.firework {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 0.5rem;
+    aspect-ratio: 1;
+    background: var(--accent);
+    border-radius: 50%;
+    animation: explode 1s ease-out forwards;
+    opacity: 0;
+}
+
+/* Animations */
+@keyframes containerFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-10px); }
+}
+
+@keyframes celebrate {
+    0% { transform: scale(1); }
+    100% { transform: scale(1.05); }
+}
+
+@keyframes explode {
+    0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: translate(-50%, -50%) scale(15);
+        opacity: 0;
+    }
+}
+
+/* Hover Effects */
+.time-section:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(56, 189, 248, 0.2);
+}
+
+.creator-credit:hover {
+    transform: translateY(-5px);
+    border-color: var(--accent);
+}
+
+/* Media Queries */
+@media (max-width: 768px) {
+    .container {
+        padding: 20px;
+    }
+
+    #countdown {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 15px;
+    }
+
+    .time-section {
+        padding: 15px;
+    }
+
+    .creator-credit {
+        bottom: 10px;
+        right: 10px;
+        padding: 10px 15px;
+        font-size: 0.8rem;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* Print Styles */
+@media print {
+    body {
+        background: none;
+    }
+
+    .container,
+    .time-section,
+    .creator-credit {
+        box-shadow: none;
+        border: 1px solid #000;
+    }
+}
+
+
+
+
+
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Countdown to New Year</h1>
+        <div id="countdown">
+            <div class="time-section">
+                <span id="days">00</span>
+                <p>Days</p>
+            </div>
+            <div class="time-section">
+                <span id="hours">00</span>
+                <p>Hours</p>
+            </div>
+            <div class="time-section">
+                <span id="minutes">00</span>
+                <p>Minutes</p>
+            </div>
+            <div class="time-section">
+                <span id="seconds">00</span>
+                <p>Seconds</p>
+            </div>
+        </div>
+        <div id="new-year-message" class="hidden">
+            <h2>🎉 Happy New Year 2025! 🎊</h2>
+        </div>
+    </div>
+    <div class="creator-credit">
+        <div class="credit-content">
+            Created by <span>Alfred Osei Boakye</span>
+        </div>
+    </div>
+    <div class="fireworks"></div>
+<div class="fireworks"></div>
+<div class="fireworks"></div>
+
+    <script>
+        function getGhanaNewYear() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    // Create date for next new year in Ghana timezone (GMT+0)
+    return new Date(Date.UTC(currentYear + 1, 0, 1, 0, 0, 0));
+}
+
+function updateCountdown() {
+    const now = new Date();
+    const newYear = getGhanaNewYear();
+    const diff = newYear - now;
+
+    if (diff <= 0) {
+        // Show New Year message
+        document.getElementById('countdown').style.display = 'none';
+        document.getElementById('new-year-message').classList.remove('hidden');
+        return;
+    }
+
+    // Calculate remaining time
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+    const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+    // Update the display
+    document.getElementById('days').textContent = days.toString().padStart(2, '0');
+    document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+    document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+    document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+}
+
+// Update countdown every second
+setInterval(updateCountdown, 1000);
+
+// Initial update
+updateCountdown();
+
+
+function createFirework() {
+    const firework = document.createElement('div');
+    firework.className = 'firework';
+    
+    // Random position
+    firework.style.left = Math.random() * 100 + '%';
+    firework.style.top = Math.random() * 100 + '%';
+    
+    document.body.appendChild(firework);
+    
+    // Remove after animation
+    setTimeout(() => {
+        firework.remove();
+    }, 1000);
+}
+
+function startFireworks() {
+    setInterval(createFirework, 300);
+}
+
+// Add to your countdown completion logic
+if (timeLeft <= 0) {
+    startFireworks();
+    document.getElementById('new-year-message').classList.add('show');
+}
+
+
+
+    </script>
+</body>
+</html>
